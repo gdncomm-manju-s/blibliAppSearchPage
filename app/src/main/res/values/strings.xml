@@ -1,0 +1,44 @@
+<resources>
+
+    <string name="privacy_text">Dengan log in, kamu menyetujui Kebijakan Privasi dan Syarat &amp; Ketentuan Blibli Tiket.</string>
+    <string name="app_name">BlibliHomePage</string>
+
+    <string name="cancel_registration_title">Batalkan proses pendaftaran?</string>
+    <string name="cancel_registration_subtitle">
+        Kalau proses ini dibatalkan, kamu harus mengisi semua detail akunmu dari awal lagi.
+    </string>
+    <string name="btn_yes_cancel">Ya, batalkan</string>
+    <string name="btn_continue_registration">Lanjutkan pendaftaran</string>
+
+    <string name="welcome_message">Welcome to Blibli Home Page</string>
+    <string name="category_title">Category</string>
+    <string name="category_electronics">Electronics</string>
+    <string name="category_groceries">Groceries</string>
+    <string name="category_fashion">Fashion</string>
+
+    <string name="logo_desc">Blibli logo</string>
+    <string name="hint_email_phone">Nomor HP atau email</string>
+    <string name="error_email_format">Format harus seperti: email@email.com</string>
+    <string name="btn_login">Log in</string>
+    <string name="login_faster_with">Log in lebih cepat dengan</string>
+    <string name="dont_have_account">Belum punya akun? <b><font color="#2B79F7">Daftar, yuk!</font></b></string>
+
+    <string name="close_button_desc">Tutup</string>
+    <string name="complete_account_details">Lengkapi Detail Akun</string>
+    <string name="info_banner_text">Akun yang kamu buat ini bisa dipakai di semua aplikasi di ekosistem Blibli Tiket, lho!</string>
+    <string name="about_ecosystem">Tentang ekosistem Blibli Tiket</string>
+    <string name="hint_fullname">Nama lengkap*</string>
+    <string name="fullname_hint_note">Seperti di KTP/Paspor/SIM.</string>
+    <string name="hint_phone">Nomor HP*</string>
+    <string name="hint_email">Email*</string>
+    <string name="hint_password">Kata sandi*</string>
+    <string name="password_instruction">Pastikan kata sandimu memiliki:</string>
+    <string name="uppercase_rule">○ Huruf besar</string>
+    <string name="lowercase_rule">○ Huruf kecil</string>
+    <string name="number_rule">○ Angka</string>
+    <string name="length_rule">○ 8–50 karakter</string>
+    <string name="btn_signup">Daftar</string>
+    <string name="indonesia_flag_desc">Bendera Indonesia</string>
+    <string name="phone_prefix">+62</string>
+
+</resources>

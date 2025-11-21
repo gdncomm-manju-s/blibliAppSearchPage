@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Bag Shape -->
+    <path
+        android:fillColor="#7A7A7A"
+        android:pathData="M6,8 L18,8 L20,20 L4,20 Z"/>
+
+    <!-- Bag Handle -->
+    <path
+        android:fillColor="#7A7A7A"
+        android:pathData="M8,8 C8,5 10,3 12,3 C14,3 16,5 16,8" />
+</vector>

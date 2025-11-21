@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#2ECC71</color>
+    <color name="red">#FF5B5B</color>
+    <color name="blue">#2B79F7</color>
+    <color name="gray">#777777</color>
+    <color name="black">#000000</color>
+    <color name="light_blue">#E6EEFF</color>
+
+    <color name="category_bg">#EEEEEE</color>
+    <color name="bg_light_blue">#A3CFFF</color>
+    <color name="primary_blue">#0079F2</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_hint">#8A8A8A</color>
+    <color name="text_secondary">#777777</color>
+    <color name="error_red">#FF0000</color>
+
+    <color name="bg_light_gray">#F7F9FC</color>
+    <color name="info_banner_bg">#E8F2FF</color>
+    <color name="text_dark">#333333</color>
+    <color name="text_light_gray">#7A7A7A</color>
+    <color name="divider_gray">#E0E0E0</color>
+
+    <color name="blueAccent">#2B79F7</color>
+    <color name="grayLight">#e6e6e6</color>
+
+    <color name="gray_bg">#F7F7F7</color>
+    <color name="chip_border">#DDDDDD</color>
+    <color name="blue_primary">#1976D2</color>
+
+    <color name="purple_700">#296CE0</color>
+    <color name="chip_bg">#F3F4F6</color>
+    <color name="divider">#E5E7EB</color>
+    <color name="yellow">#FFD600</color>
+
+</resources>

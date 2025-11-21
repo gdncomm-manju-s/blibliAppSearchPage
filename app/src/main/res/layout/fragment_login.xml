@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#a3cfff"
+    android:fitsSystemWindows="true">
+
+    <!-- Background illustration -->
+
+    <ImageView
+
+        android:id="@+id/bgImage"
+        android:layout_width="421dp"
+        android:layout_height="502dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background"
+        app:layout_constraintBottom_toTopOf="@+id/loginCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <!-- Blibli logo -->
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="175dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Blibli logo"
+        android:src="@drawable/sample_banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Close button -->
+
+    <ImageButton
+        android:id="@+id/btnClose"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Close"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- White rounded sheet -->
+
+    <ScrollView
+        android:id="@+id/loginCard"
+        android:layout_width="411dp"
+        android:layout_height="636dp"
+        android:layout_marginTop="220dp"
+        android:background="@drawable/rounded_sheet"
+        android:elevation="10dp"
+        android:fillViewport="true"
+        android:padding="20dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivLogo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <!-- Input field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilUsername"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp">
+                <!--            <com.google.android.material.textfield.TextInputEditText-->
+                <!--                android:id="@+id/etUsername"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="50dp"-->
+                <!--                android:layout_marginTop="10dp"-->
+                <!--                android:background="@drawable/edittext_bg"-->
+                <!--                android:hint="Nomor HP atau email"-->
+                <!--                android:inputType="textEmailAddress"-->
+                <!--                android:paddingStart="12dp"-->
+                <!--                android:paddingEnd="12dp"-->
+                <!--                android:textColor="#000" />-->
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <EditText
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:autofillHints=""
+                android:background="@drawable/edittext_bg"
+                android:hint="Nomor HP atau email"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="16dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#8A8A8A"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Format harus seperti: email@email.com"
+                android:textColor="#FF0000"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+
+            <!-- Login button -->
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edittext_bg"
+                android:backgroundTint="#0079F2"
+                android:text="Log in"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- Divider text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Log in lebih cepat dengan"
+                android:textColor="#777"
+                android:textSize="14sp" />
+
+            <!-- Social buttons -->
+            <!-- Social login buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/social_button_bg">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Apple"
+                        android:src="@drawable/ic_apple" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/social_button_bg">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Facebook"
+                        android:src="@drawable/ic_facebook" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/social_button_bg">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Google"
+                        android:src="@drawable/ic_google" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Signup link -->
+            <!-- Signup link -->
+
+            <TextView
+                android:id="@+id/tvRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/dont_have_account"
+                android:textAlignment="center"
+                android:textSize="15sp" />
+
+            <!-- Footer -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:text="@string/privacy_text"
+                android:textColor="#777"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
