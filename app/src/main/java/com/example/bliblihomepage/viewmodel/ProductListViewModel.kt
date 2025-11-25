@@ -1,20 +1,17 @@
 package com.example.bliblihomepage.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.*
-import com.example.bliblihomepage.data.repository.ProductRepository
-import com.example.bliblihomepage.data.model.Product
+import com.example.bliblihomepage.model.Product
+import com.example.bliblihomepage.repository.ProductDataRepository
+import com.example.bliblihomepage.util.AppConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    private val app: Application
-) : AndroidViewModel(app) {
-
-    private val repo = ProductRepository(app.applicationContext)
+    private val repo: ProductDataRepository
+) : ViewModel() {
 
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> = _products
@@ -22,97 +19,76 @@ class ProductListViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _isGrid = MutableLiveData(false)
-    val isGrid: LiveData<Boolean> = _isGrid
-
     private var allProducts: List<Product> = emptyList()
+    private var filteredProducts: List<Product> = emptyList()
 
     private var page = 0
-    private val pageSize = 50
+    private var currentQuery: String = ""
+    private var fetchJob: Job? = null
 
-    // ACTIVE SEARCH STRING
-    private var currentQuery: String? = null
-
-    init {
-        loadInitial()
+    // initial load (only once)
+    fun loadInitial() {
+        if (_products.value?.isNotEmpty() == true) return
+        fetchAllAndReset(AppConfig.DEFAULT_SEARCH_TERM)
     }
 
-    fun loadInitial() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.postValue(true)
-
-            allProducts = repo.loadAllProducts()
-
+    // fetch from API (or fallback) and reset paging
+    private fun fetchAllAndReset(searchTerm: String) {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
+            _isLoading.value = true
+            allProducts = repo.fetchProducts(searchTerm)
+            filteredProducts = allProducts
             page = 0
-            val first = getPage(allProducts)
-
-            _products.postValue(first)
-            _isLoading.postValue(false)
+            loadPage(reset = true)
+            _isLoading.value = false
         }
     }
 
-    // PAGINATION
-    private fun getPage(source: List<Product>): List<Product> {
-        val start = page * pageSize
-        if (start >= source.size) return _products.value ?: emptyList()
+    // search called from UI (debounced in Fragment)
+    fun setSearch(query: String) {
+        val trimmed = query.trim()
+        currentQuery = trimmed
 
-        val end = kotlin.math.min(start + pageSize, source.size)
-
-        val current = (_products.value ?: emptyList()).toMutableList()
-        current.addAll(source.subList(start, end))
-
-        page++
-        return current
+        viewModelScope.launch {
+            page = 0
+            filteredProducts = if (trimmed.isBlank()) {
+                allProducts
+            } else {
+                // local filter; if you want remote search, call fetchAllAndReset(trimmed)
+                allProducts.filter { it.name?.contains(trimmed, ignoreCase = true) == true }
+            }
+            loadPage(reset = true)
+        }
     }
 
     fun loadMore() {
         if (_isLoading.value == true) return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.postValue(true)
-
-            // active list depends on search
-            val src = if (!currentQuery.isNullOrBlank()) {
-                allProducts.filter { it.name.contains(currentQuery!!, ignoreCase = true) }
-            } else {
-                allProducts
-            }
-
-            Thread.sleep(250) // simulate small delay
-
-            val next = getPage(src)
-            _products.postValue(next)
-            _isLoading.postValue(false)
+        viewModelScope.launch {
+            _isLoading.value = true
+            delay(AppConfig.LOAD_DELAY_MS)
+            loadPage(reset = false)
+            _isLoading.value = false
         }
     }
 
-    // TOGGLE LIST / GRID
-    fun toggleView() {
-        _isGrid.value = !(_isGrid.value ?: false)
-    }
-
-    // SEARCH SYSTEM
-    fun setSearch(q: String?) {
-        currentQuery = q
-
-        viewModelScope.launch(Dispatchers.Default) {
-
-            // When search is empty → FULL RESET
-            if (q.isNullOrBlank()) {
-                page = 0
-                val first = getPage(allProducts)
-                _products.postValue(first)
-                return@launch
-            }
-
-            // Filter source
-            val filtered = allProducts.filter {
-                it.name.contains(q, ignoreCase = true)
-            }
-
-            page = 0
-            val first = getPage(filtered)
-            _products.postValue(first)
+    private fun loadPage(reset: Boolean) {
+        val start = page * AppConfig.PAGE_SIZE
+        if (start >= filteredProducts.size) {
+            if (reset) _products.value = emptyList()
+            return
         }
+
+        val end = minOf(start + AppConfig.PAGE_SIZE, filteredProducts.size)
+        val pageData = filteredProducts.subList(start, end)
+
+        if (reset) {
+            _products.value = pageData
+        } else {
+            val current = _products.value?.toMutableList() ?: mutableListOf()
+            current.addAll(pageData)
+            _products.value = current
+        }
+        page++
     }
 }

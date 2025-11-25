@@ -1,4 +1,4 @@
-package com.example.bliblihomepage.data.model
+package com.example.bliblihomepage.model
 
 data class Product(
     val name: String,

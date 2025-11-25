@@ -13,4 +13,5 @@
         android:text="No data found"
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp" />
+
 </FrameLayout>

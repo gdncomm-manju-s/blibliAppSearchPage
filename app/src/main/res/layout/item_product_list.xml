@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/imgProduct"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="155dp"
                 android:scaleType="centerCrop" /> <!-- free ship / cnc small badges --> <ImageView
             android:id="@+id/ivBadgeFreeShip"
             android:layout_width="44dp"
