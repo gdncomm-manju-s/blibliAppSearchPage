@@ -19,6 +19,7 @@ class ProductDataRepository @Inject constructor(
     private val gson: Gson
 ) {
 
+    //responsible for fetching product data from the API
     suspend fun fetchProducts(searchTerm: String): List<Product> = withContext(Dispatchers.IO) {
         try {
             val resp: Response<ProductSearchResponse> = api.searchProducts(searchTerm)
@@ -30,7 +31,6 @@ class ProductDataRepository @Inject constructor(
 
         }
 
-        // fallback: load local json from assets named "productList.json" or "mock_products.json"
         return@withContext loadFromAssets("productList.json")
     }
 
@@ -48,7 +48,10 @@ class ProductDataRepository @Inject constructor(
         return try {
             val input = context.assets.open(fileName)
             val json = input.bufferedReader().use { it.readText() }
-            val type = com.google.gson.reflect.TypeToken.getParameterized(List::class.java, Product::class.java).type
+            val type = com.google.gson.reflect.TypeToken.getParameterized(
+                List::class.java,
+                Product::class.java
+            ).type
             val items: List<Product> = gson.fromJson(json, type)
             validateProducts(items)
         } catch (t: Throwable) {

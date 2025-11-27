@@ -1,4 +1,4 @@
-package com.example.bliblihomepage.ui
+package com.example.bliblihomepage.ui.homePage
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -1,4 +1,4 @@
-package com.example.bliblihomepage.ui
+package com.example.bliblihomepage.ui.homePage
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.bliblihomepage.R
 import com.example.bliblihomepage.databinding.FragmentLoginBinding
-
 
 class LoginFragment : Fragment() {
 

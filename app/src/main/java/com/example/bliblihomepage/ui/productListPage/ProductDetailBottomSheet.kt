@@ -1,4 +1,4 @@
-package com.example.bliblihomepage.ui
+package com.example.bliblihomepage.ui.productListPage
 
 import android.graphics.Paint
 import android.os.Bundle
@@ -11,7 +11,10 @@ import com.example.bliblihomepage.databinding.BottomsheetProductDetailBinding
 import com.example.bliblihomepage.model.Product
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.NumberFormat
+import java.util.Locale
 
+//to show product details in bottom sheet
 @AndroidEntryPoint
 class ProductDetailBottomSheet(private val product: Product, private val onAdd: (() -> Unit)? = null) :
     BottomSheetDialogFragment() {
@@ -39,8 +42,8 @@ class ProductDetailBottomSheet(private val product: Product, private val onAdd: 
 
         val img = product.images.firstOrNull()
         if (!img.isNullOrBlank()) {
-            Glide.with(requireContext()).load(img).placeholder(R.drawable.placeholder_image).error(R.drawable.placeholder_image).into(b.bsImg)
-        } else b.bsImg.setImageResource(R.drawable.placeholder_image)
+            Glide.with(requireContext()).load(img).placeholder(R.drawable.ic_cart).error(R.drawable.ic_cart).into(b.bsImg)
+        } else b.bsImg.setImageResource(R.drawable.ic_cart)
 
         b.bsAddToCart.setOnClickListener {
             onAdd?.invoke()
@@ -54,7 +57,7 @@ class ProductDetailBottomSheet(private val product: Product, private val onAdd: 
     }
 
     private fun formatPrice(value: Number): String {
-        val nf = java.text.NumberFormat.getCurrencyInstance(java.util.Locale("in", "ID"))
+        val nf = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
         return nf.format(value).replace(",00", "")
     }
 }

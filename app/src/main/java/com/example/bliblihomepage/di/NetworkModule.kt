@@ -1,7 +1,7 @@
 package com.example.bliblihomepage.di
 
-import android.content.Context
 import com.example.bliblihomepage.network.ProductApiService
+import com.example.bliblihomepage.util.AppConfig
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -13,16 +13,17 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+//provides network-related dependencies
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "https://www.blibli.com/"
 
+    //dependencies are created once, reused everywhere
     @Provides
     @Singleton
     fun provideOkHttp(): OkHttpClient {
         val logger = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = AppConfig.API_LOG_LEVEL
         }
         return OkHttpClient.Builder()
             .addInterceptor(logger)
@@ -33,7 +34,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(AppConfig.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

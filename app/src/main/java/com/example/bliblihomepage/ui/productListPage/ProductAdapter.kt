@@ -1,31 +1,35 @@
-package com.example.bliblihomepage.ui
+package com.example.bliblihomepage.ui.productListPage
 
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.bliblihomepage.R
 import com.example.bliblihomepage.databinding.ItemLoadingBinding
 import com.example.bliblihomepage.databinding.ItemProductListBinding
 import com.example.bliblihomepage.model.Product
 import com.example.bliblihomepage.util.AppConfig
 import com.example.bliblihomepage.util.loadUrlSafe
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
+//Displays products in a RecyclerView
 class ProductAdapter(
     private val onItemClick: (Product) -> Unit,
     private val onAddToCart: (Product) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+    //Stores products
     private val items = mutableListOf<Product>()
     private var showLoading = false
 
     companion object {
+        //product row
         private const val TYPE_LIST = 0
-        private const val TYPE_LOADING = 1
+
+        //loader row
+        private const val TYPE_LOADING = 2
     }
 
     override fun getItemCount(): Int = items.size + if (showLoading) 1 else 0
@@ -34,11 +38,13 @@ class ProductAdapter(
         return if (showLoading && position == itemCount - 1) TYPE_LOADING else TYPE_LIST
     }
 
+    //initial load
     fun setData(list: List<Product>) {
         items.clear()
         items.addAll(filterValid(list))
         notifyDataSetChanged()
     }
+
 
     fun appendData(list: List<Product>) {
         val filtered = filterValid(list)
@@ -62,10 +68,12 @@ class ProductAdapter(
         }
     }
 
+    //row has a name + price to avoid empty items
     private fun filterValid(list: List<Product>): List<Product> {
         return list.filter { p ->
             val hasName = !p.name.isNullOrBlank()
-            val hasPrice = !p.price.priceDisplay.isNullOrBlank() || p.price.salePrice != null || p.price.listPrice != null
+            val hasPrice =
+                !p.price.priceDisplay.isNullOrBlank() || p.price.salePrice != null || p.price.listPrice != null
             hasName && hasPrice
         }
     }
@@ -98,7 +106,8 @@ class ProductAdapter(
             if (!orig.isNullOrEmpty()) {
                 b.tvOriginalPrice.visibility = View.VISIBLE
                 b.tvOriginalPrice.text = orig
-                b.tvOriginalPrice.paintFlags = b.tvOriginalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                b.tvOriginalPrice.paintFlags =
+                    b.tvOriginalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 b.tvOriginalPrice.visibility = View.GONE
             }
@@ -113,7 +122,7 @@ class ProductAdapter(
             val sold = p.soldCountTotal.takeIf { it > 0 } ?: p.review?.count ?: 0
             if (rating > 0.0) {
                 b.ratingRow.visibility = View.VISIBLE
-                b.tvRating.text = String.format(Locale.getDefault(), "%.1f", rating)
+                b.tvRating.text = String.Companion.format(Locale.getDefault(), "%.1f", rating)
                 b.tvSoldSmall.text = "Terjual $sold"
             } else {
                 b.ratingRow.visibility = View.GONE
@@ -129,7 +138,8 @@ class ProductAdapter(
             // tags
             val tags = p.tags.map { it.uppercase(Locale.getDefault()) }
             b.ivBadgeFreeShip.visibility = if ("FREE_SHIPPING" in tags) View.VISIBLE else View.GONE
-            b.ivBadgeCnc.visibility = if ("CNC_AVAILABLE" in tags || "CLICK_COLLECT" in tags) View.VISIBLE else View.GONE
+            b.ivBadgeCnc.visibility =
+                if ("CNC_AVAILABLE" in tags || "CLICK_COLLECT" in tags) View.VISIBLE else View.GONE
 
             // image with placeholder + error
             val img = p.images.firstOrNull()
@@ -140,8 +150,6 @@ class ProductAdapter(
             }
 
             // ensure image and button aligned bottom using existing xml constraints
-            // (Make sure your item_product_list.xml uses ConstraintLayout with img and button anchored to bottom)
-
             b.root.setOnClickListener { onItemClick(p) }
             b.btnAddToCart.setOnClickListener { onAddToCart(p) }
         }
@@ -155,11 +163,11 @@ class ProductAdapter(
     }
 
     private fun applyBadges(p: Product, officialIcon: View?, merchantIcon: View?) {
-        if (officialIcon is android.widget.ImageView) {
+        if (officialIcon is ImageView) {
             val isOfficial = !p.brand.isNullOrBlank() && !p.brand.equals("no brand", true)
             officialIcon.visibility = if (isOfficial) View.VISIBLE else View.GONE
         }
-        if (merchantIcon is android.widget.ImageView) {
+        if (merchantIcon is ImageView) {
             val url = p.badge?.merchantBadgeUrl
             if (!url.isNullOrBlank()) {
                 merchantIcon.visibility = View.VISIBLE

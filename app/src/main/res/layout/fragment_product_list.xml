@@ -87,14 +87,14 @@
 
             <ImageView
                 android:id="@+id/ivCart"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="28dp"
                 android:src="@drawable/ic_cart" />
 
             <ImageView
                 android:id="@+id/ivHome"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:src="@drawable/ic_home" />
         </LinearLayout>

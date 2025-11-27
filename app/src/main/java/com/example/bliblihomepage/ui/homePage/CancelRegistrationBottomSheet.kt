@@ -1,11 +1,11 @@
-package com.example.bliblihomepage.ui
+package com.example.bliblihomepage.ui.homePage
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.bliblihomepage.databinding.BottomCancelSheetBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CancelRegistrationBottomSheet(
     private val onConfirm: () -> Unit

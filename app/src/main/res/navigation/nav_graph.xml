@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/productListFragment">
 
     <!-- Login -->
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.bliblihomepage.ui.LoginFragment"
+        android:name="com.example.bliblihomepage.ui.homePage.LoginFragment"
         android:label="Login">
 
         <action
@@ -26,7 +26,7 @@
     <!-- Signup -->
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.example.bliblihomepage.ui.SignupFragment"
+        android:name="com.example.bliblihomepage.ui.homePage.SignupFragment"
         android:label="Signup">
 
         <action
@@ -37,13 +37,13 @@
     <!-- Home -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.bliblihomepage.ui.HomeFragment"
+        android:name="com.example.bliblihomepage.ui.homePage.HomeFragment"
         android:label="Home" />
 
     <!-- Product List -->
     <fragment
         android:id="@+id/productListFragment"
-        android:name="com.example.bliblihomepage.ui.ProductListFragment"
+        android:name="com.example.bliblihomepage.ui.productListPage.ProductListFragment"
         android:label="Product List">
 
         <action
@@ -58,7 +58,8 @@
     <!-- Product Detail -->
     <fragment
         android:id="@+id/productDetailFragment"
-        android:name="com.example.bliblihomepage.ui.ProductDetailFragment"
+        android:label="Product Detail" />
+<!--        android:name="com.example.bliblihomepage.ui.ProductDetailFragment"-->
         android:label="Product Detail" />
 
 </navigation>

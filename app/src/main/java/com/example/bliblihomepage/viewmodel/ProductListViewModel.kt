@@ -8,31 +8,36 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
+//Fetching data from the repository
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
     private val repo: ProductDataRepository
 ) : ViewModel() {
 
+    //Fragment observes this to update UI
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> = _products
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
+    //Stores ALL products fetched from API
     private var allProducts: List<Product> = emptyList()
+
+    //Stores search filtered products
     private var filteredProducts: List<Product> = emptyList()
 
     private var page = 0
     private var currentQuery: String = ""
     private var fetchJob: Job? = null
 
-    // initial load (only once)
+    // initial load
     fun loadInitial() {
         if (_products.value?.isNotEmpty() == true) return
         fetchAllAndReset(AppConfig.DEFAULT_SEARCH_TERM)
     }
 
-    // fetch from API (or fallback) and reset paging
+    // fetch from API and reset paging
     private fun fetchAllAndReset(searchTerm: String) {
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
@@ -45,7 +50,7 @@ class ProductListViewModel @Inject constructor(
         }
     }
 
-    // search called from UI (debounced in Fragment)
+    // search called from UI
     fun setSearch(query: String) {
         val trimmed = query.trim()
         currentQuery = trimmed
@@ -55,7 +60,6 @@ class ProductListViewModel @Inject constructor(
             filteredProducts = if (trimmed.isBlank()) {
                 allProducts
             } else {
-                // local filter; if you want remote search, call fetchAllAndReset(trimmed)
                 allProducts.filter { it.name?.contains(trimmed, ignoreCase = true) == true }
             }
             loadPage(reset = true)
