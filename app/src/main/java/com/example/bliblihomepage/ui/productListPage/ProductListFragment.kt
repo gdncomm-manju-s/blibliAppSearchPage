@@ -18,13 +18,7 @@ import com.example.bliblihomepage.util.AppConfig
 import com.example.bliblihomepage.util.hideKeyboardFromWindow
 import com.example.bliblihomepage.viewmodel.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
