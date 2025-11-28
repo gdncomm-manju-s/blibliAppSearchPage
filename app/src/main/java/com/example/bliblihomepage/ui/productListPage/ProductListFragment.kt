@@ -96,20 +96,16 @@ class ProductListFragment : Fragment() {
 
             binding.ivClear.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
 
-            searchJob?.cancel()
-            searchJob = mainScope.launch {
-
                 //Search happens after 400ms user stops typing
-                delay(400L)
+
                 if (query.isEmpty()) {
                     viewModel.setSearch("")
                 } else if (query.length < AppConfig.MIN_SEARCH_LENGTH) {
-                    return@launch
+
                 } else {
                     viewModel.setSearch(query)
                 }
             }
-        }
 
         binding.ivClear.setOnClickListener {
             binding.etSearch.setText("")

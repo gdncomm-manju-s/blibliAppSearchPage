@@ -11,7 +11,7 @@ object AppConfig {
     const val BASE_URL = "https://www.blibli.com/"
     const val DEFAULT_SEARCH_TERM = "samsung"
 
-    const val PAGE_SIZE = 60
+    const val PAGE_SIZE = 20
     const val LOAD_DELAY_MS = 1500L
 
     // Errors

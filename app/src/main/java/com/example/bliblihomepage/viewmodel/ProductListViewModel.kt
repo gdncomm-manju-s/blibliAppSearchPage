@@ -56,6 +56,7 @@ class ProductListViewModel @Inject constructor(
         currentQuery = trimmed
 
         viewModelScope.launch {
+            delay(400L)
             page = 0
             filteredProducts = if (trimmed.isBlank()) {
                 allProducts
