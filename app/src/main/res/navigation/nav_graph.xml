@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/productListFragment">
+    app:startDestination="@id/loginFragment">
 
     <!-- Login -->
     <fragment
@@ -21,7 +21,13 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+
+        <!-- ADD THIS -->
+        <action
+            android:id="@+id/action_loginFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
+
 
     <!-- Signup -->
     <fragment
@@ -33,6 +39,11 @@
             android:id="@+id/action_signupFragment_to_productListFragment"
             app:destination="@id/productListFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.bliblihomepage.ui.productListPage.CartFragment"
+        android:label="Cart" />
 
     <!-- Home -->
     <fragment
@@ -55,11 +66,8 @@
             app:destination="@id/homeFragment" />
     </fragment>
 
-    <!-- Product Detail -->
     <fragment
         android:id="@+id/productDetailFragment"
-        android:label="Product Detail" />
-<!--        android:name="com.example.bliblihomepage.ui.ProductDetailFragment"-->
         android:label="Product Detail" />
 
 </navigation>

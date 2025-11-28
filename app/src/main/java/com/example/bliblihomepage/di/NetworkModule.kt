@@ -1,6 +1,7 @@
 package com.example.bliblihomepage.di
 
 import com.example.bliblihomepage.network.ProductApiService
+import com.example.bliblihomepage.network.BannerApiService
 import com.example.bliblihomepage.util.AppConfig
 import com.google.gson.Gson
 import dagger.Module
@@ -12,39 +13,49 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import com.google.gson.GsonBuilder
+import java.util.concurrent.TimeUnit
 
-//provides network-related dependencies
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    //dependencies are created once, reused everywhere
+    private const val BASE_URL = "https://www.blibli.com/"
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson = GsonBuilder().create()
+
     @Provides
     @Singleton
     fun provideOkHttp(): OkHttpClient {
-        val logger = HttpLoggingInterceptor().apply {
-            level = AppConfig.API_LOG_LEVEL
-        }
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
-            .addInterceptor(logger)
+            .addInterceptor(logging)
+            .callTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient, gson: Gson): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(AppConfig.BASE_URL)
-            .client(client)
+    fun provideRetrofit(ok: OkHttpClient, gson: Gson): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(ok)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-    }
 
     @Provides
     @Singleton
-    fun provideApi(retrofit: Retrofit): ProductApiService =
-        retrofit.create(ProductApiService::class.java)
+    fun provideBannerApi(retrofit: Retrofit): BannerApiService =
+        retrofit.create(BannerApiService::class.java)
 
     @Provides
-    fun provideGson(): Gson = Gson()
+    @Singleton
+    fun provideProductApi(retrofit: Retrofit): ProductApiService =
+        retrofit.create(ProductApiService::class.java)
 }
+

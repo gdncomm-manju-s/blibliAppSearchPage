@@ -68,8 +68,12 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.fragment:fragment-ktx:1.8.9")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.9.6")
-    implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
+//    implementation("androidx.navigation:navigation-fragment-ktx:2.9.6")
+//    implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
+
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
     implementation("androidx.recyclerview:recyclerview:1.4.0")
 
     // Encrypted SharedPreferences
@@ -88,6 +92,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.navigation.fragment)
     kapt("androidx.room:room-compiler:2.6.1")
 
     // ---------------------------
@@ -134,6 +139,11 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.15.1")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+
 
 
 }

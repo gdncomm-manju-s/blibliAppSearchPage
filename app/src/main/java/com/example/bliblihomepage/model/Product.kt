@@ -1,6 +1,11 @@
 package com.example.bliblihomepage.model
 
 data class Product(
+    val id: String?,                   // <-- important for cart
+    val sku: String?,                  // <-- important for cart
+    val itemSku: String?,              // maps to itemId
+    val defaultSku: String?,
+
     val name: String,
     val price: Price,
     val brand: String?,

@@ -41,4 +41,12 @@
     <string name="indonesia_flag_desc">Bendera Indonesia</string>
     <string name="phone_prefix">+62</string>
 
+    <string name="search_placeholder">Search products...</string>
+    <string name="logout">Logout</string>
+    <string name="product_added">Product added</string>
+    <string name="product_exists">Product already exists</string>
+    <string name="no_data_found">No data found</string>
+    <string name="loading">Loading...</string>
+    <string name="add_to_cart">Add to Cart</string>
+
 </resources>

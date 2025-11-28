@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.bliblihomepage.R
 import com.example.bliblihomepage.databinding.FragmentSignupBinding
 import dagger.hilt.android.AndroidEntryPoint
+import com.example.bliblihomepage.util.SharedPrefManager
 
 @AndroidEntryPoint
 class SignupFragment : Fragment() {
@@ -112,7 +113,8 @@ class SignupFragment : Fragment() {
             }
 
             //Save user info
-            prefs.edit().putBoolean("user_$email", true).apply()
+            SharedPrefManager.login(requireContext(), email)
+
 
             Toast.makeText(requireContext(), "Akun berhasil dibuat!", Toast.LENGTH_SHORT).show()
 

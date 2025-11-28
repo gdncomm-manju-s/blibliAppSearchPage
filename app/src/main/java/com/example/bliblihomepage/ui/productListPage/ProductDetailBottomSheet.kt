@@ -14,10 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
 import java.util.Locale
 
-//to show product details in bottom sheet
 @AndroidEntryPoint
-class ProductDetailBottomSheet(private val product: Product, private val onAdd: (() -> Unit)? = null) :
-    BottomSheetDialogFragment() {
+class ProductDetailBottomSheet(
+    private val product: Product,
+    private val onAdd: ((Product) -> Unit)? = null
+) : BottomSheetDialogFragment() {
 
     private var _b: BottomsheetProductDetailBinding? = null
     private val b get() = _b!!
@@ -46,7 +47,7 @@ class ProductDetailBottomSheet(private val product: Product, private val onAdd: 
         } else b.bsImg.setImageResource(R.drawable.ic_cart)
 
         b.bsAddToCart.setOnClickListener {
-            onAdd?.invoke()
+            onAdd?.invoke(product)
             dismiss()
         }
     }

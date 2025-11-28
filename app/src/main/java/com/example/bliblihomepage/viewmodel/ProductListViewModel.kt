@@ -5,95 +5,91 @@ import com.example.bliblihomepage.model.Product
 import com.example.bliblihomepage.repository.ProductDataRepository
 import com.example.bliblihomepage.util.AppConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//Fetching data from the repository
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
     private val repo: ProductDataRepository
 ) : ViewModel() {
 
-    //Fragment observes this to update UI
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> = _products
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    //Stores ALL products fetched from API
-    private var allProducts: List<Product> = emptyList()
+    private var currentQuery = ""
+    private var page = 1
+    private var loadedList = mutableListOf<Product>()
+    private var job: Job? = null
 
-    //Stores search filtered products
-    private var filteredProducts: List<Product> = emptyList()
+    var hasSearchStarted = false
+        private set
 
-    private var page = 0
-    private var currentQuery: String = ""
-    private var fetchJob: Job? = null
-
-    // initial load
-    fun loadInitial() {
-        if (_products.value?.isNotEmpty() == true) return
-        fetchAllAndReset(AppConfig.DEFAULT_SEARCH_TERM)
+    // When search bar empty → show BLANK
+    fun initBlank() {
+        hasSearchStarted = false
+        loadedList.clear()
+        currentQuery = ""
+        page = 1
+        _products.value = emptyList()
     }
 
-    // fetch from API and reset paging
-    private fun fetchAllAndReset(searchTerm: String) {
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
-            _isLoading.value = true
-            allProducts = repo.fetchProducts(searchTerm)
-            filteredProducts = allProducts
-            page = 0
-            loadPage(reset = true)
-            _isLoading.value = false
+    fun startSearch() {
+        hasSearchStarted = true
+    }
+
+    fun search(q: String) {
+        if (q.length < AppConfig.MIN_SEARCH_LENGTH) {
+            _products.value = emptyList()
+            return
         }
-    }
 
-    // search called from UI
-    fun setSearch(query: String) {
-        val trimmed = query.trim()
-        currentQuery = trimmed
+        currentQuery = q
+        page = 1
+        loadedList.clear()
 
-        viewModelScope.launch {
-            delay(400L)
-            page = 0
-            filteredProducts = if (trimmed.isBlank()) {
-                allProducts
-            } else {
-                allProducts.filter { it.name?.contains(trimmed, ignoreCase = true) == true }
-            }
-            loadPage(reset = true)
+        job?.cancel()
+        job = viewModelScope.launch {
+            delay(200) // Debounce
+
+            _isLoading.value = true
+
+            val result = repo.searchProducts(q, page, 0)
+            val list = result.getOrNull().orEmpty()
+
+            loadedList.addAll(list)
+            _products.value = loadedList
+
+            _isLoading.value = false
         }
     }
 
     fun loadMore() {
-        if (_isLoading.value == true) return
+        if (_isLoading.value == true || currentQuery.isBlank()) return
+
+        page++
+
         viewModelScope.launch {
             _isLoading.value = true
-            delay(AppConfig.LOAD_DELAY_MS)
-            loadPage(reset = false)
+
+            val result = repo.searchProducts(
+                currentQuery,
+                page,
+                (page - 1) * AppConfig.PAGE_SIZE
+            )
+
+            val next = result.getOrNull().orEmpty()
+
+            if (next.isNotEmpty()) {
+                loadedList.addAll(next)
+                _products.value = loadedList
+            }
+
             _isLoading.value = false
         }
-    }
-
-    private fun loadPage(reset: Boolean) {
-        val start = page * AppConfig.PAGE_SIZE
-        if (start >= filteredProducts.size) {
-            if (reset) _products.value = emptyList()
-            return
-        }
-
-        val end = minOf(start + AppConfig.PAGE_SIZE, filteredProducts.size)
-        val pageData = filteredProducts.subList(start, end)
-
-        if (reset) {
-            _products.value = pageData
-        } else {
-            val current = _products.value?.toMutableList() ?: mutableListOf()
-            current.addAll(pageData)
-            _products.value = current
-        }
-        page++
     }
 }
