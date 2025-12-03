@@ -22,14 +22,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:scaleType="fitCenter" />
+
             <ImageView
-            android:id="@+id/ivBadgeFreeShip"
-            android:layout_width="44dp"
-            android:layout_height="22dp"
-            android:layout_gravity="bottom|start"
-            android:layout_margin="6dp"
-            android:src="@drawable/free_shipping"
-            android:visibility="gone" />
+                android:id="@+id/ivBadgeFreeShip"
+                android:layout_width="44dp"
+                android:layout_height="22dp"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="6dp"
+                android:src="@drawable/free_shipping"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/ivBadgeCnc"

@@ -6,7 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ProductApiService {
-    // Real endpoint path
     @GET("backend/search/products")
     suspend fun searchProducts(
         @Query("searchTerm") searchTerm: String,

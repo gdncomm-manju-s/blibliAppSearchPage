@@ -1,6 +1,7 @@
 package com.example.bliblihomepage.ui.homePage
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,8 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    private val TAG = "LoginFragment"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,6 +31,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated")
 
         // Clear error text while typing
         binding.etUsername.addTextChangedListener {
@@ -36,23 +40,19 @@ class LoginFragment : Fragment() {
                 ContextCompat.getDrawable(requireContext(), R.drawable.edittext_bg)
         }
 
-
         binding.btnLogin.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
 
-            // Empty check
             if (username.isBlank()) {
                 showError("Nomor HP atau email harus diisi.")
                 return@setOnClickListener
             }
-
             if (password.isBlank()) {
                 showError("Kata sandi harus diisi.")
                 return@setOnClickListener
             }
 
-            // Validate formats
             val isEmail = Patterns.EMAIL_ADDRESS.matcher(username).matches()
             val isPhone = username.matches(Regex("^\\+?[0-9]{8,15}\$"))
 
@@ -61,27 +61,31 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Check in SharedPref
-            val registered = SharedPrefManager.login(requireContext(), username, password)
-
-            if (!registered) {
-                // New user → signup
+            // 1) If user not registered, go to signup
+            if (!SharedPrefManager.isRegistered(requireContext(), username)) {
+                Log.d(TAG, "User not registered -> navigate signup")
                 val args = Bundle().apply {
                     putString("prefill_username", username)
                     putBoolean("is_email", isEmail)
                 }
-                findNavController().navigate(
-                    R.id.action_loginFragment_to_signupFragment,
-                    args
-                )
-            } else {
-                // Existing user
+                // safe navigation: ensure fragment is added
+                if (isAdded) {
+                    findNavController().navigate(R.id.action_loginFragment_to_signupFragment, args)
+                }
+                return@setOnClickListener
+            }
+
+            // 2) User is registered -> try login
+            val loginOk = SharedPrefManager.login(requireContext(), username, password)
+            if (loginOk) {
                 Toast.makeText(requireContext(), "Login berhasil!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.cartFragment)
+                if (isAdded) findNavController().navigate(R.id.cartFragment)
+            } else {
+                // Registered but wrong password
+                showError("Kata sandi salah. Silakan coba lagi.")
             }
         }
     }
-
 
     private fun showError(message: String) {
         binding.tvError.apply {

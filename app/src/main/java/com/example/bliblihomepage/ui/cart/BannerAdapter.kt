@@ -1,4 +1,4 @@
-package com.example.bliblihomepage.ui.productListPage
+package com.example.bliblihomepage.ui.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,6 +27,8 @@ class BannerAdapter(
         val url = items[position]
         Glide.with(holder.itemView)
             .load(url)
+            .placeholder(R.drawable.ic_cart)
+            .error(R.drawable.ic_cart)
             .into(holder.binding.imgBanner)
     }
 

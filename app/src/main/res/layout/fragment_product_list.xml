@@ -62,9 +62,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:padding="5dp"
                     android:hint="Search products ..."
                     android:imeOptions="actionSearch"
+                    android:padding="5dp"
                     android:singleLine="true"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -147,14 +147,25 @@
                 layout="@layout/layout_no_data"
                 android:visibility="gone" />
 
-<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/fabToggle"-->
-<!--                android:layout_width="56dp"-->
-<!--                android:layout_height="56dp"-->
-<!--                android:layout_margin="16dp"-->
-<!--                android:src="@drawable/ic_grid"-->
-<!--                android:layout_gravity="top|end"-->
-<!--                app:backgroundTint="@color/light_blue" />-->
+            <!-- SEARCH LOADING SPINNER -->
+            <ProgressBar
+                android:id="@+id/progressSearch"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:visibility="gone" />
+
+            <!-- PAGINATION LOADING SPINNER -->
+            <ProgressBar
+                android:id="@+id/progressLoadMore"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="32dp"
+                android:visibility="gone" />
+
+
         </FrameLayout>
     </LinearLayout>
 

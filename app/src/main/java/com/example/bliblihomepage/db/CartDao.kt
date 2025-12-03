@@ -1,11 +1,15 @@
-package com.example.bliblihomepage.di
+package com.example.bliblihomepage.db
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.bliblihomepage.di.CartItem
 
 @Dao
 interface CartDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(item: CartItem): Long
 
     @Query("SELECT * FROM cart_item WHERE userId = :userId ORDER BY id DESC")

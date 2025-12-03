@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="#F7F9FC">
+    android:background="#F7F9FC"
+    android:fitsSystemWindows="true">
 
     <!-- Header -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,8 +22,8 @@
             android:layout_width="20dp"
             android:layout_height="30dp"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:contentDescription="Tutup"/>
+            android:contentDescription="Tutup"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,13 +40,13 @@
         android:id="@+id/infoBanner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:background="#E8F2FF"
         android:orientation="vertical"
         android:padding="12dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/header">
 
         <TextView
             android:id="@+id/tvInfo"
@@ -62,8 +61,8 @@
             android:layout_height="wrap_content"
             android:text="Tentang ekosistem Blibli Tiket"
             android:textColor="#2B79F7"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Signup Form -->
@@ -71,28 +70,28 @@
         android:id="@+id/signupCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:elevation="4dp"
-        android:padding="20dp"
         android:layout_margin="16dp"
+        android:background="@android:color/white"
         android:clipToOutline="true"
-        app:layout_constraintTop_toBottomOf="@id/infoBanner"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/infoBanner">
 
         <!-- Full Name -->
         <EditText
             android:id="@+id/etFullName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="Nama lengkap*"
-            android:paddingHorizontal="16dp"
             android:background="@drawable/edittext_bg"
-            android:textColorHint="#8A8A8A"
+            android:hint="Nama lengkap*"
+            android:inputType="textPersonName"
+            android:paddingHorizontal="16dp"
             android:textColor="#000"
-            android:textSize="15sp"
-            android:inputType="textPersonName" />
+            android:textColorHint="#8A8A8A"
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -106,17 +105,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal"
             android:layout_marginTop="12dp"
             android:background="@drawable/edittext_bg"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="12dp"
-                android:src="@drawable/ic_indonesia"
-                android:contentDescription="Indonesia Flag" />
+                android:contentDescription="Indonesia Flag"
+                android:src="@drawable/ic_indonesia" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -136,12 +135,12 @@
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="12dp"
-                android:hint="Nomor HP*"
                 android:background="@android:color/transparent"
+                android:hint="Nomor HP*"
                 android:inputType="phone"
-                android:textColorHint="#8A8A8A"
+                android:paddingStart="12dp"
                 android:textColor="#000"
+                android:textColorHint="#8A8A8A"
                 android:textSize="15sp" />
         </LinearLayout>
 
@@ -151,13 +150,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
-            android:hint="Email*"
-            android:paddingHorizontal="16dp"
             android:background="@drawable/edittext_bg"
-            android:textColorHint="#8A8A8A"
+            android:hint="Email*"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
             android:textColor="#000"
-            android:textSize="15sp"
-            android:inputType="textEmailAddress" />
+            android:textColorHint="#8A8A8A"
+            android:textSize="15sp" />
 
         <!-- Password -->
         <EditText
@@ -165,35 +164,35 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
-            android:hint="Kata sandi*"
-            android:paddingHorizontal="16dp"
             android:background="@drawable/edittext_bg"
-            android:textColorHint="#8A8A8A"
+            android:hint="Kata sandi*"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp"
             android:textColor="#000"
-            android:textSize="15sp"
-            android:inputType="textPassword"/>
+            android:textColorHint="#8A8A8A"
+            android:textSize="15sp" />
 
         <!-- Password Validation -->
         <LinearLayout
             android:id="@+id/passwordValidationCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/password_validation_bg"
+            android:elevation="2dp"
             android:orientation="vertical"
             android:padding="12dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            android:background="@drawable/password_validation_bg"
-            android:elevation="2dp">
+            android:visibility="gone">
 
 
-        <TextView
+            <TextView
                 android:id="@+id/tvInstruction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Pastikan kata sandimu memiliki:"
                 android:textColor="#333"
-                android:textSize="13sp"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvUppercase"

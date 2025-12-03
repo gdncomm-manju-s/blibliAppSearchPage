@@ -1,8 +1,9 @@
 package com.example.bliblihomepage.di
 
 import android.content.Context
-import com.example.bliblihomepage.di.CartDatabase
-import com.example.bliblihomepage.di.CartDao
+import androidx.room.Room
+import com.example.bliblihomepage.db.CartDao
+import com.example.bliblihomepage.db.CartDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +17,13 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideCartDatabase(@ApplicationContext context: Context): CartDatabase =
-        CartDatabase.getInstance(context)
+    fun provideDatabase(@ApplicationContext context: Context): CartDatabase {
+        return Room.databaseBuilder(
+            context,
+            CartDatabase::class.java,
+            "cart_db"
+        ).build()
+    }
 
     @Provides
     fun provideCartDao(db: CartDatabase): CartDao = db.cartDao()

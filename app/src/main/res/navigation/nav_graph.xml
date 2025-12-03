@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.bliblihomepage.ui.productListPage.CartFragment"
+        android:name="com.example.bliblihomepage.ui.cart.CartFragment"
         android:label="Cart" />
 
     <!-- Home -->

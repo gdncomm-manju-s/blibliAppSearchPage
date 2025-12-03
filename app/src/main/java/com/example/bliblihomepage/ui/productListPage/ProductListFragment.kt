@@ -8,7 +8,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,6 @@ import com.example.bliblihomepage.util.SharedPrefManager
 import com.example.bliblihomepage.viewmodel.CartViewModel
 import com.example.bliblihomepage.viewmodel.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
@@ -32,6 +30,7 @@ class ProductListFragment : Fragment() {
     private val cartVm: CartViewModel by activityViewModels()
 
     private lateinit var adapter: ProductAdapter
+    private var isLoadingMore = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,25 +56,41 @@ class ProductListFragment : Fragment() {
         binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProducts.adapter = adapter
 
+        // 🟢 PAGINATION
         binding.rvProducts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                if (!rv.canScrollVertically(1)) viewModel.loadMore()
+                if (!rv.canScrollVertically(1) && !isLoadingMore) {
+                    isLoadingMore = true
+                    binding.progressLoadMore.visibility = View.VISIBLE
+                    viewModel.loadMore()
+                }
             }
         })
     }
 
     private fun setupObservers() {
 
+        // Observe loading state
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressSearch.visibility =
+                if (isLoading && !isLoadingMore) View.VISIBLE else View.GONE
+        }
+
+        // Observe products
         viewModel.products.observe(viewLifecycleOwner) { list ->
 
-            // 1️⃣ Before any search → BLANK SCREEN
+            // Hide pagination loader
+            isLoadingMore = false
+            binding.progressLoadMore.visibility = View.GONE
+
+            // Before search → keep screen blank
             if (!viewModel.hasSearchStarted) {
                 binding.rvProducts.visibility = View.GONE
                 binding.layoutNoData.root.visibility = View.GONE
                 return@observe
             }
 
-            // 2️⃣ After search started → show results OR empty layout
+            // After search → show no data or results
             if (list.isEmpty()) {
                 binding.rvProducts.visibility = View.GONE
                 binding.layoutNoData.root.visibility = View.VISIBLE
@@ -87,18 +102,17 @@ class ProductListFragment : Fragment() {
         }
     }
 
+
     private fun setupSearch() {
         binding.etSearch.addTextChangedListener { editable ->
             val query = editable.toString().trim()
             binding.ivClear.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
 
-            // When empty → blank screen
             if (query.isEmpty()) {
                 viewModel.initBlank()
                 return@addTextChangedListener
             }
 
-            // Trigger search only if ≥ MIN chars
             if (query.length >= AppConfig.MIN_SEARCH_LENGTH) {
                 viewModel.startSearch()
                 viewModel.search(query)
@@ -111,12 +125,9 @@ class ProductListFragment : Fragment() {
         }
 
         binding.ivBack.setOnClickListener { findNavController().navigateUp() }
-        binding.ivCart.setOnClickListener { findNavController().navigateUp() }
-
+        binding.ivCart.setOnClickListener { findNavController().navigate(R.id.cartFragment) }
         binding.ivHome.setOnClickListener { findNavController().navigate(R.id.action_productList_to_homeFragment) }
-
     }
-
 
     private fun openDetailBottomSheet(product: Product) {
         val user = SharedPrefManager.getEmail(requireContext()) ?: return
@@ -130,6 +141,7 @@ class ProductListFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        binding.rvProducts.adapter = null // FIX MEMORY LEAK
         _binding = null
         super.onDestroyView()
     }

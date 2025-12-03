@@ -20,8 +20,6 @@ import java.util.concurrent.TimeUnit
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://www.blibli.com/"
-
     @Provides
     @Singleton
     fun provideGson(): Gson = GsonBuilder().create()
@@ -43,7 +41,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(ok: OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(AppConfig.BASE_URL)
             .client(ok)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

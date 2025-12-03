@@ -1,6 +1,9 @@
-package com.example.bliblihomepage.ui.productListPage
+package com.example.bliblihomepage.ui.cart
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.widget.ViewPager2
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.bliblihomepage.R
 import com.example.bliblihomepage.databinding.FragmentCartBinding
 import com.example.bliblihomepage.util.SharedPrefManager
 import com.example.bliblihomepage.viewmodel.CartViewModel
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -31,13 +33,17 @@ class CartFragment : Fragment() {
 
     private val vm: CartViewModel by activityViewModels()
 
-    // keep adapter instance so we don't reset it repeatedly
     private lateinit var cartAdapter: CartAdapter
     private lateinit var bannerAdapter: BannerAdapter
 
     private var page = 1
-    private val pageSize = 50
+    private val pageSize = 20
     private var isLoading = false
+
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private var autoScrollRunnable: Runnable? = null
+
+    private val MAX_DOTS = 5
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,52 +51,70 @@ class CartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
+
+        Log.d("DEBUG_FLOW", "CartFragment onCreateView")
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val user = SharedPrefManager.getEmail(requireContext())
+        Log.d("DEBUG_FLOW", "CartFragment onViewCreated - added=${isAdded}")
 
-        // If no user, go to login
-        if (user.isNullOrEmpty()) {
-            findNavController().navigate(R.id.loginFragment)
+        // auth check
+        if (!SharedPrefManager.isLoggedIn(requireContext())) {
+            view.post { if (isAdded) findNavController().navigate(R.id.loginFragment) }
             return
         }
 
-        // Search navigate
-        binding.searchBar.setOnClickListener {
-            findNavController().navigate(R.id.productListFragment)
+        val ctx = context ?: return
+        val user = SharedPrefManager.getEmail(ctx)
+        if (user.isNullOrEmpty()) {
+            view.post { if (isAdded) findNavController().navigate(R.id.loginFragment) }
+            return
         }
 
-        // Logout
+        // UI setup
+        setupCartRecycler(user)
+        setupBanner()
+        setupClicks(user)
+
+        // ask vm to load data
+        vm.loadCart(1, pageSize, user)
+        vm.loadBanner()
+
+        observeFlows(user)
+    }
+
+    private fun setupClicks(user: String) {
+        // Example searchbar click - assumes you have searchBar in binding
+        binding.searchBar.setOnClickListener {
+            findNavController().navigate(R.id.productListFragment) // replace with actual action to search
+        }
+
+        // logout button
         binding.btnLogout.setOnClickListener {
             SharedPrefManager.logout(requireContext())
             findNavController().navigate(R.id.loginFragment)
         }
 
-        // Clear entire cart
+        // clear all cart
         binding.btnClearCart.setOnClickListener {
             vm.clearCart(user)
         }
+    }
 
-        // Setup RecyclerView and adapter once
+    private fun setupCartRecycler(user: String) {
         cartAdapter = CartAdapter(
             mutableListOf(),
-            onAddClick = { /* not used in cart */ },
-            onDeleteClick = { p ->
-                vm.deleteItem(p, user)
-            })
+            onAddClick = { },
+            onDeleteClick = { p -> vm.deleteItem(p, user) }
+        )
+
         binding.rvCart.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCart.adapter = cartAdapter
 
-        // Pagination
-        binding.rvCart.addOnScrollListener(object :
-            androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                rv: androidx.recyclerview.widget.RecyclerView,
-                dx: Int,
-                dy: Int
-            ) {
+        binding.rvCart.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
                 if (!rv.canScrollVertically(1) && !isLoading) {
                     isLoading = true
                     page++
@@ -98,23 +122,30 @@ class CartFragment : Fragment() {
                 }
             }
         })
+    }
 
+    private fun setupBanner() {
         bannerAdapter = BannerAdapter(mutableListOf())
         binding.bannerPager.adapter = bannerAdapter
 
+        binding.bannerPager.clipToPadding = false
+        binding.bannerPager.clipChildren = false
+        binding.bannerPager.offscreenPageLimit = 3
 
-        // Load data
-        vm.loadCart(1, pageSize, user)
-        vm.loadBanner()
+        // ensure visible
+        binding.bannerPager.visibility = View.VISIBLE
+        binding.bannerIndicator.visibility = View.VISIBLE
+    }
 
-        // Observe flows lifecycle-safely
+    private fun observeFlows(user: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
                 launch {
                     vm.cartItems.collect { list ->
+                        Log.d("DEBUG_FLOW", "CartFragment - cartItems size=${list.size}")
                         binding.tvEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
                         binding.tvTotalCount.text = "Total: ${list.size}"
-
                         cartAdapter.update(list.toMutableList())
                         isLoading = false
                     }
@@ -122,14 +153,16 @@ class CartFragment : Fragment() {
 
                 launch {
                     vm.banners.collect { banners ->
+                        Log.d("DEBUG_FLOW", "CartFragment - banners collected size=${banners.size}")
                         if (banners.isNotEmpty()) {
-
-                            bannerAdapter.update(banners)
-
-                            // Create dots (max 5)
+                            // ensure main thread / view lifecycle
+                            bannerAdapter.update(banners.toMutableList())
                             setupDots(banners.size)
+                            updateSelectedDot(0)
 
-                            // Update selected dot when pager scrolls
+                            // remove previous callback so we don't double-schedule
+                            autoScrollRunnable?.let { autoScrollHandler.removeCallbacks(it) }
+
                             binding.bannerPager.registerOnPageChangeCallback(
                                 object : ViewPager2.OnPageChangeCallback() {
                                     override fun onPageSelected(position: Int) {
@@ -138,30 +171,43 @@ class CartFragment : Fragment() {
                                 }
                             )
 
-                            // Mark first dot as selected
-                            updateSelectedDot(0)
+                            enableAutoScroll(banners.size)
 
                             binding.bannerPager.visibility = View.VISIBLE
                             binding.bannerIndicator.visibility = View.VISIBLE
-
                         } else {
                             binding.bannerPager.visibility = View.GONE
                             binding.bannerIndicator.visibility = View.GONE
                         }
                     }
                 }
-
             }
         }
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    // AUTO SCROLL
+    private fun enableAutoScroll(size: Int) {
+        autoScrollRunnable?.let { autoScrollHandler.removeCallbacks(it) }
 
+        autoScrollRunnable = object : Runnable {
+            override fun run() {
+                val itemCount = bannerAdapter.itemCount
+                if (itemCount > 0) {
+                    val next = (binding.bannerPager.currentItem + 1) % size
+                    binding.bannerPager.currentItem = next
+                }
+                autoScrollHandler.postDelayed(this, 3000)
+            }
+        }
+        autoScrollHandler.postDelayed(autoScrollRunnable!!, 3000)
     }
 
-    private val MAX_DOTS = 5
+    override fun onDestroyView() {
+        autoScrollRunnable?.let { autoScrollHandler.removeCallbacks(it) }
+        binding.rvCart.adapter = null
+        _binding = null
+        super.onDestroyView()
+    }
 
     private fun setupDots(count: Int) {
         val dotCount = minOf(count, MAX_DOTS)
@@ -201,5 +247,4 @@ class CartFragment : Fragment() {
             )
         }
     }
-
 }

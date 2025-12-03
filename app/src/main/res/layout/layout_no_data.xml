@@ -18,19 +18,9 @@
         android:id="@+id/imgEmpty"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:layout_marginTop="100dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
         android:src="@drawable/ic_no_data_image" />
-
-<!--    <Button-->
-<!--        android:id="@+id/btnTryAgain"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center_horizontal"-->
-<!--        android:layout_marginTop="495dp"-->
-<!--        android:backgroundTint="@color/blue"-->
-<!--        android:text="Try again"-->
-<!--        android:textColor="@android:color/white" />-->
 
 
 </FrameLayout>

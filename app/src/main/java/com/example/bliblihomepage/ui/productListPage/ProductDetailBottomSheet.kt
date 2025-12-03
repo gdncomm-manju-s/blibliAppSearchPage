@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.bliblihomepage.R
 import com.example.bliblihomepage.databinding.BottomsheetProductDetailBinding
@@ -23,7 +24,11 @@ class ProductDetailBottomSheet(
     private var _b: BottomsheetProductDetailBinding? = null
     private val b get() = _b!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _b = BottomsheetProductDetailBinding.inflate(inflater, container, false)
         return b.root
     }
@@ -31,11 +36,13 @@ class ProductDetailBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         b.bsTitle.text = product.name ?: ""
         b.bsPrice.text = product.price.priceDisplay ?: product.price.offerPriceDisplay ?: ""
-        val orig = product.price.strikeThroughPriceDisplay ?: product.price.listPrice?.let { formatPrice(it) } ?: ""
+        val orig = product.price.strikeThroughPriceDisplay
+            ?: product.price.listPrice?.let { formatPrice(it) } ?: ""
         if (orig.isNotBlank()) {
             b.bsOriginalPrice.visibility = View.VISIBLE
             b.bsOriginalPrice.text = orig
-            b.bsOriginalPrice.paintFlags = b.bsOriginalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            b.bsOriginalPrice.paintFlags =
+                b.bsOriginalPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         } else b.bsOriginalPrice.visibility = View.GONE
 
         b.bsLocation.text = product.location ?: ""
@@ -43,10 +50,12 @@ class ProductDetailBottomSheet(
 
         val img = product.images.firstOrNull()
         if (!img.isNullOrBlank()) {
-            Glide.with(requireContext()).load(img).placeholder(R.drawable.ic_cart).error(R.drawable.ic_cart).into(b.bsImg)
+            Glide.with(requireContext()).load(img).placeholder(R.drawable.ic_cart)
+                .error(R.drawable.ic_cart).into(b.bsImg)
         } else b.bsImg.setImageResource(R.drawable.ic_cart)
 
         b.bsAddToCart.setOnClickListener {
+            Toast.makeText(requireContext(), "Added to cart!", Toast.LENGTH_SHORT).show()
             onAdd?.invoke(product)
             dismiss()
         }

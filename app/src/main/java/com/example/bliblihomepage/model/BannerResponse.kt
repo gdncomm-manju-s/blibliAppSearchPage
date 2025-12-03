@@ -1,4 +1,5 @@
 package com.example.bliblihomepage.model
+
 data class BannerResponse(
     val code: Int?,
     val status: String?,

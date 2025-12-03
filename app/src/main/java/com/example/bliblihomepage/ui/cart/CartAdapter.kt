@@ -1,4 +1,4 @@
-package com.example.bliblihomepage.ui.productListPage
+package com.example.bliblihomepage.ui.cart
 
 import android.graphics.Paint
 import android.view.LayoutInflater

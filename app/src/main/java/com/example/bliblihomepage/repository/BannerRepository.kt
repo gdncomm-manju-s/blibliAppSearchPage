@@ -1,6 +1,5 @@
 package com.example.bliblihomepage.repository
 
-import com.example.bliblihomepage.model.BannerResponse
 import com.example.bliblihomepage.network.BannerApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
