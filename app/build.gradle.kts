@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 
-    // NEW → Hilt plugin
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
@@ -55,7 +54,6 @@ android {
 
 dependencies {
 
-    // --- Your existing dependencies ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -68,8 +66,6 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.fragment:fragment-ktx:1.8.9")
-//    implementation("androidx.navigation:navigation-fragment-ktx:2.9.6")
-//    implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
@@ -126,12 +122,6 @@ dependencies {
 // Shimmer
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
-// Material (you already have, keep)
-// implementation("com.google.android.material:material:1.9.0")
-
-// Optional: RecyclerView animations (we'll use LayoutAnimation + default animator) -> already included with recyclerview
-
-// You have Glide already; if not:
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
     implementation("com.google.code.gson:gson:2.10.1")
@@ -143,7 +133,6 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-
 
 
 }
