@@ -105,15 +105,10 @@ class CartAdapter(
         // OFFICIAL STORE BADGE
         b.imgOfficial.visibility = if (!p.brand.isNullOrBlank()) View.VISIBLE else View.GONE
 
-        // Buttons: show delete (remove from cart) and hide add-to-cart in cart
+        // Buttons: show delete
         b.btnDelete.visibility = View.VISIBLE
         b.btnDelete.setOnClickListener { onDeleteClick(p) }
 
-//        // If you also want an "add more" button, use onAddClick. Example:
-//        b.btnAddToCart?.let { addBtn ->
-//            addBtn.visibility = View.GONE // hide in cart; show if needed
-//            // addBtn.setOnClickListener { onAddClick(p) }
-//        }
     }
 
     override fun getItemCount() = items.size

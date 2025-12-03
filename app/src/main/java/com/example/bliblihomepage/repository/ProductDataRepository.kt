@@ -13,12 +13,6 @@ class ProductDataRepository @Inject constructor(
     private val api: ProductApiService
 ) {
 
-    /**
-     * Search products using your real API.
-     * @param searchTerm - keyword user types
-     * @param page - page number (starts from 1)
-     * @param start - offset for backend (start = (page-1)*pageSize)
-     */
     suspend fun searchProducts(
         searchTerm: String,
         page: Int = 1,

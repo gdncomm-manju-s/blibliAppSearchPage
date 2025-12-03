@@ -48,8 +48,8 @@
                 <!-- Search Icon -->
                 <ImageView
                     android:id="@+id/ivSearchIcon"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
                     android:src="@drawable/ic_search"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:hint="Cari brand, produk, atau seller"
+                    android:padding="5dp"
+                    android:hint="Search products ..."
                     android:imeOptions="actionSearch"
                     android:singleLine="true"
                     android:textSize="14sp"
@@ -127,14 +128,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="110dp"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvCategoryInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="Ini hasil dari semua kategori. Tandai kategori untuk pencarian lebih spesifik."
-            android:textSize="13sp" />
 
         <!-- RecyclerView + No-data -->
         <FrameLayout

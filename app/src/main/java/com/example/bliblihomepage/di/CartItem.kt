@@ -9,6 +9,6 @@ data class CartItem(
     val id: Int = 0,
 
     val userId: String,
-    val productId: String,      // Unique key for product
-    val productJson: String     // Full JSON
+    val productId: String,
+    val productJson: String
 )

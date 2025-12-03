@@ -8,23 +8,47 @@ object SharedPrefManager {
     private const val KEY_EMAIL = "logged_email"
     private const val KEY_LOGGED_IN = "logged_in"
 
-    /** LOGIN USER */
-    fun login(context: Context, email: String): Boolean {
+    private const val KEY_PASSWORD_PREFIX = "password_"
+    private const val KEY_REGISTERED_PREFIX = "registered_"
+
+
+    /** SIGN UP USER */
+    fun signup(context: Context, username: String, password: String) {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
 
-        // Whether user was already registered
-        val isRegistered = sp.getBoolean("registered_$email", false)
-
         sp.edit()
-            .putString(KEY_EMAIL, email)
-            .putBoolean(KEY_LOGGED_IN, true)
-            .putBoolean("registered_$email", true)   // mark the user as registered
+            .putString(KEY_PASSWORD_PREFIX + username, password)
+            .putBoolean(KEY_REGISTERED_PREFIX + username, true)
             .apply()
-
-        return isRegistered
     }
 
-    /** LOGOUT USER */
+
+    /** LOGIN USER */
+    fun login(context: Context, username: String, password: String): Boolean {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+
+        val savedPassword = sp.getString(KEY_PASSWORD_PREFIX + username, null)
+
+        return if (savedPassword != null && savedPassword == password) {
+            sp.edit()
+                .putString(KEY_EMAIL, username)
+                .putBoolean(KEY_LOGGED_IN, true)
+                .apply()
+            true
+        } else {
+            false
+        }
+    }
+
+
+    /** CHECK IF USER REGISTERED */
+    fun isRegistered(context: Context, username: String): Boolean {
+        val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        return sp.getBoolean(KEY_REGISTERED_PREFIX + username, false)
+    }
+
+
+    /** LOGOUT */
     fun logout(context: Context) {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         sp.edit()
@@ -33,13 +57,15 @@ object SharedPrefManager {
             .apply()
     }
 
-    /** CHECK LOGIN */
+
+    /** CHECK LOGIN STATE */
     fun isLoggedIn(context: Context): Boolean {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         return sp.getBoolean(KEY_LOGGED_IN, false)
     }
 
-    /** GET CURRENT LOGGED-IN USER EMAIL */
+
+    /** CURRENT USER */
     fun getEmail(context: Context): String? {
         val sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
         return sp.getString(KEY_EMAIL, null)

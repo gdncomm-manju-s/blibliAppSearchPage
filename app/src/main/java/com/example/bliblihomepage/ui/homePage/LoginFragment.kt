@@ -36,14 +36,19 @@ class LoginFragment : Fragment() {
                 ContextCompat.getDrawable(requireContext(), R.drawable.edittext_bg)
         }
 
-        /** -------------------------
-         *  LOGIN BUTTON CLICK
-         * ------------------------- */
+
         binding.btnLogin.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
 
+            // Empty check
             if (username.isBlank()) {
                 showError("Nomor HP atau email harus diisi.")
+                return@setOnClickListener
+            }
+
+            if (password.isBlank()) {
+                showError("Kata sandi harus diisi.")
                 return@setOnClickListener
             }
 
@@ -56,11 +61,11 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // LOGIN → returns TRUE if already registered
-            val registered = SharedPrefManager.login(requireContext(), username)
+            // Check in SharedPref
+            val registered = SharedPrefManager.login(requireContext(), username, password)
 
             if (!registered) {
-                // New user → Go to Signup
+                // New user → signup
                 val args = Bundle().apply {
                     putString("prefill_username", username)
                     putBoolean("is_email", isEmail)
@@ -70,24 +75,10 @@ class LoginFragment : Fragment() {
                     args
                 )
             } else {
-                // Existing user → Go to Cart
+                // Existing user
                 Toast.makeText(requireContext(), "Login berhasil!", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.cartFragment)
             }
-        }
-
-        /** -------------------------
-         *  REGISTER CLICK
-         * ------------------------- */
-        binding.tvRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
-        }
-
-        /** -------------------------
-         *  CLOSE APP
-         * ------------------------- */
-        binding.btnClose.setOnClickListener {
-            requireActivity().finish()
         }
     }
 

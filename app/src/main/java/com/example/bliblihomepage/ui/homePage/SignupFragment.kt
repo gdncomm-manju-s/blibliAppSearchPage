@@ -112,8 +112,11 @@ class SignupFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            //Save user info
-            SharedPrefManager.login(requireContext(), email)
+            // Save user in SharedPref
+            SharedPrefManager.signup(requireContext(), email, password)
+
+            // Log them in immediately
+            SharedPrefManager.login(requireContext(), email, password)
 
 
             Toast.makeText(requireContext(), "Akun berhasil dibuat!", Toast.LENGTH_SHORT).show()

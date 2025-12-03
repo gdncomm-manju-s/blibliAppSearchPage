@@ -50,7 +50,6 @@ class CartRepository @Inject constructor(
         saveProducts(user, emptyList())
     }
 
-    /** Extract correct product ID (handles id, sku, itemId, etc.) */
     private fun getProductId(p: Product): String {
         return when {
             !p.id.isNullOrEmpty() -> p.id!!
